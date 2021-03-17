@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "392066565107",
+    "project_id": "yousecretchatting2021",
+    "storage_bucket": "yousecretchatting2021.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:392066565107:android:b8de63b02bdc5743ba4886",
+        "android_client_info": {
+          "package_name": "com.juj27.secretchatting"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "392066565107-c40gf4of0f5a22guq3vcio6duei2mcfb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyiMEai8nHp_F6lrqMS8gYfD5cCkwLL4g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "392066565107-c40gf4of0f5a22guq3vcio6duei2mcfb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
