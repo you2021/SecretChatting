@@ -1,7 +1,9 @@
 package com.juj27.secretchatting;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -44,14 +46,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar ac = getSupportActionBar();
+        ac.setDisplayShowTitleEnabled(false);
+
         et = findViewById(R.id.et);
         civ = findViewById(R.id.circle);
 
         //SharedPreferences에 미리 저장되어 있는 닉네임, 프로필 이미지가 있다면 읽어와라
          loadData();
-         if(G.nickName !=null){
+
+         if(G.nickName != null){
              et.setText(G.nickName);
              Picasso.get().load(G.imgUrl).into(civ);
+
+            // Intent intent = new Intent(this, ListActivity.class);
+             // startActivity(intent);
 
              //처음이 아니네
              isFirst = false;
