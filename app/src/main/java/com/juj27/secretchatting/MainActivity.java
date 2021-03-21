@@ -15,10 +15,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -26,14 +25,12 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText et;
+    EditText et ,etAge;
     CircleImageView civ;
 
     Uri imgUri;
@@ -53,16 +50,21 @@ public class MainActivity extends AppCompatActivity {
 
         et = findViewById(R.id.et);
         civ = findViewById(R.id.circle);
+        etAge = findViewById(R.id.et_age);
+
 
         //SharedPreferences에 미리 저장되어 있는 닉네임, 프로필 이미지가 있다면 읽어와라
          loadData();
 
          if(G.nickName != null){
              et.setText(G.nickName);
-             Picasso.get().load(G.imgUrl).into(civ);
+             Picasso.get().load(G.profileUrl).into(civ);
+             etAge.setText(G.age);
 
-            // Intent intent = new Intent(this, ListActivity.class);
-             // startActivity(intent);
+             Intent intent = new Intent(this, ProfileActivity.class);
+              startActivity(intent);
+
+              finish();
 
              //처음이 아니네
              isFirst = false;
@@ -72,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
     void loadData(){
         SharedPreferences pref = getSharedPreferences("account", MODE_PRIVATE);
         G.nickName = pref.getString("nickName", null);
-        G.imgUrl = pref.getString("profileUrl", null);
+        G.profileUrl = pref.getString("profileUrl", null);
+        G.age = pref.getString("age", null);
     }
 
     public void clickCircle(View view) {
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         if(isFirst || isChanged){
             saveData();
         }else {
-            Intent intent = new Intent(this, ChattingActivity.class);
+            Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
             finish();
         }
@@ -112,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
     void saveData(){
         //닉네임 가져오기
         G.nickName = et.getText().toString();
+        G.age = etAge.getText().toString();
 
         if (imgUri == null) {
             AlertDialog alertDialog;
@@ -145,28 +149,34 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
                         //다운로드 주소 url 문자열로 얻기
-                        G.imgUrl = uri.toString();
+                        G.profileUrl = uri.toString();
                         Toast.makeText(MainActivity.this, "저장 완료", Toast.LENGTH_SHORT).show();
 
-                        //Firestore DB 에 저장
-                        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-                        Map<String, String> user = new HashMap<>();
-                        user.put(G.nickName, G.imgUrl);
+//                        //Firestore DB 에 저장
+                        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                        DatabaseReference rootRef = firebaseDatabase.getReference();
 
-                        CollectionReference userRef = firebaseFirestore.collection("profiles");
-                        userRef.add(user);
+                        String proName = G.nickName;
+                        String age = G.age;
+                        String proUrl = G.profileUrl;
+
+                        ProfileVOItem person = new ProfileVOItem(proName,age,proUrl);
+
+                        DatabaseReference personRef = rootRef.child("person");
+                        personRef.push().setValue(person);
 
                         //처음 실행할때만 닉네임과 사진을 입력하기
                         SharedPreferences pref = getSharedPreferences("account", MODE_PRIVATE);
                         SharedPreferences.Editor editor = pref.edit();
 
                         editor.putString("nickName", G.nickName);
-                        editor.putString("profileUrl", G.imgUrl);
+                        editor.putString("profileUrl", G.profileUrl);
+                        editor.putString("age", G.age);
 
                         editor.commit();
 
                         //완료후 채팅화면 전환
-                        Intent intent = new Intent(MainActivity.this, ChattingActivity.class);
+                        Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
                         startActivity(intent);
 
                         finish();

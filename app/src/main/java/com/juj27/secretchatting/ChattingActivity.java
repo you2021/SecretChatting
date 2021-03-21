@@ -32,6 +32,8 @@ public class ChattingActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference chatRef;
 
+    ProfileVOItem item = new ProfileVOItem();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,10 +44,12 @@ public class ChattingActivity extends AppCompatActivity {
         chatAdapter = new ChatAdapter(this, messageItems);
         listView.setAdapter(chatAdapter);
 
+        String chat = G.nickName+ item.proName;
+
         //Firebase  Database 에 저장되어 있는 메세지들 읽어오기
         firebaseDatabase = FirebaseDatabase.getInstance();
         //'chat'노드에 MessageItem 들을 저장 ['chat' 이라는 이름만 별도로 지정하면 여러 채팅방 개설도 가능함]
-        chatRef = firebaseDatabase.getReference("chat");
+        chatRef = firebaseDatabase.getReference(chat);
 
         //'chat'노드의 값이 변경되는 것을 듣는 리스너
         //addValueEventListener() 는 노드 아래 자식 1개가 추가되어도
@@ -92,7 +96,7 @@ public class ChattingActivity extends AppCompatActivity {
         //firebase DB에 저장할 데이터들 (닉네임, 메세지, 프로필이미지URL, 작성시간)
         String nickName = G.nickName;
         String message = etMsg.getText().toString();
-        String profileUrl = G.imgUrl;
+        String profileUrl = G.profileUrl;
 
         //메세지 작성시간을 문자열..(시;분)
         Calendar calendar = Calendar.getInstance();  //현재시간 객체

@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Secret Chatting"
+            android:text="연결고리"
             android:textSize="40sp"
             android:textStyle="bold"
             android:textColor="#FF333333"
@@ -34,7 +34,21 @@
         android:layout_below="@id/circle"
         android:background="@drawable/bg_edit"
         android:padding="10dp"
-        android:hint="닉네임을 입력해주세요"
+        android:hint="이름을 입력해주세요"
+        android:layout_centerHorizontal="true"
+        android:inputType="text"
+        android:layout_marginTop="20dp"/>
+
+    <EditText
+        android:id="@+id/et_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:maxLength="10"
+        android:layout_below="@id/et"
+        android:background="@drawable/bg_edit"
+        android:padding="10dp"
+        android:hint="나이를 입력해주세요"
         android:layout_centerHorizontal="true"
         android:inputType="text"
         android:layout_marginTop="20dp"/>
