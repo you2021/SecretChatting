@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.FileUtils;
@@ -65,6 +66,7 @@ public class ProfileActivity extends AppCompatActivity {
         tvAge = findViewById(R.id.tv_me_age);
         img = findViewById(R.id.circle_img);
 
+        loadData();
         tvName.setText(G.nickName);
         tvAge.setText(G.age+"세");
         Glide.with(this).load(G.profileUrl).into(img);
@@ -81,12 +83,10 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-
                 item = snapshot.getValue(ProfileVOItem.class);
 
-                if (G.profileUrl != item.proUrl ){
+                if (!G.nickName.equals(item.proName) ){
                     items.add(item);
-
                     adapter.notifyDataSetChanged();
                     View.setSelection(items.size());
                 }
@@ -116,25 +116,35 @@ public class ProfileActivity extends AppCompatActivity {
         View.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, android.view.View view, int position, long id) {
+                ProfileVOItem item = items.get(position);
+
                 Intent intent = new Intent(ProfileActivity.this, ChattingActivity.class);
-                intent.putExtra("name", item.proName );
-                Log.i("aa",item.proName);
+                intent.putExtra("name",item.proName);
                 startActivity(intent);
+
+
             }
         });
+    }
+
+    void loadData(){
+        SharedPreferences pref = getSharedPreferences("account", MODE_PRIVATE);
+        G.nickName = pref.getString("nickName", null);
+        G.profileUrl = pref.getString("profileUrl", null);
+        G.age = pref.getString("age", null);
     }
 
     public void clickProfile(android.view.View view) {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        startActivityForResult(intent, 5);
+        startActivityForResult(intent, 10);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 5 && resultCode == RESULT_OK) {
+        if (requestCode == 10 && resultCode == RESULT_OK) {
             uri = data.getData();
             Picasso.get().load(uri).into(img);   //외부저장소 동적 퍼미션이 자동 적용
 
@@ -146,7 +156,7 @@ public class ProfileActivity extends AppCompatActivity {
     void UpdateData(){
         //FireStorage 파일명 중복x
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
-        String fileName = simpleDateFormat.format(new Date())+".pgn";
+        String fileName = simpleDateFormat.format(new Date())+".png";
 
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         StorageReference imgRef = firebaseStorage.getReference("profileImage/"+fileName);
@@ -155,21 +165,39 @@ public class ProfileActivity extends AppCompatActivity {
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                G.profileUrl = uri.toString();
-                Toast.makeText(ProfileActivity.this, "저장 완료", Toast.LENGTH_SHORT).show();
 
-                //Firestore DB 에 저장
-                FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-                DatabaseReference rootRef = firebaseDatabase.getReference();
+                imgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        G.profileUrl = uri.toString();
+                        Toast.makeText(ProfileActivity.this, "저장 완료", Toast.LENGTH_SHORT).show();
 
-                String proName = G.nickName;
-                String age = G.age;
-                String proUrl = G.profileUrl;
+                        //Firestore DB 에 저장
+                        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                        DatabaseReference rootRef = firebaseDatabase.getReference();
 
-                ProfileVOItem person = new ProfileVOItem(proName,age,proUrl);
+                        String proName = G.nickName;
+                        String age = G.age;
+                        String proUrl = G.profileUrl;
 
-                DatabaseReference personRef = rootRef.child("person");
-                personRef.push().setValue(person);
+                        ProfileVOItem person = new ProfileVOItem(proName,age,proUrl);
+
+                        DatabaseReference personRef = rootRef.child("person");
+                        personRef.child(proName).setValue(person);
+                        //처음 실행할때만 닉네임과 사진을 입력하기
+                        SharedPreferences pref = getSharedPreferences("account", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = pref.edit();
+
+                        editor.putString("nickName", G.nickName);
+                        editor.putString("profileUrl", G.profileUrl);
+                        editor.putString("age", G.age);
+
+                        editor.commit();
+
+                    }
+                });
+
+
             }
         });
     }

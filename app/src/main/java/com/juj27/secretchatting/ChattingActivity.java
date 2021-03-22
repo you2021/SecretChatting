@@ -51,18 +51,24 @@ public class ChattingActivity extends AppCompatActivity {
         listView.setAdapter(chatAdapter);
 
 
-        String chat = G.nickName;
+
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");
+
+
+        String chat;
+//        String chat = G.nickName+name;
+//
+//       Toast.makeText(this, ""+G.nickName+"\n"+ name+"\n"+ chat, Toast.LENGTH_SHORT).show();
 
 
         String arr[]= {G.nickName, name};
         Arrays.sort(arr);
         chat= Arrays.toString(arr);
 
-        chat.replace("[","");
-        chat.replace(",","");
-        chat.replace("]","");
+        chat= chat.replace("[","");
+        chat= chat.replace(",","");
+        chat= chat.replace("]","");
 
 
         Toast.makeText(this, ""+chat, Toast.LENGTH_SHORT).show();

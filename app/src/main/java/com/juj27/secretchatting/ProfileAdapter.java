@@ -1,6 +1,7 @@
 package com.juj27.secretchatting;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -42,6 +44,10 @@ public class ProfileAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ProfileVOItem item = items.get(position);
+
+//        Intent intent = new Intent(context, ChattingActivity.class);
+//        intent.putExtra("name",item.proName);
+//        context.startActivity(intent);
 
         View itemView = null;
 

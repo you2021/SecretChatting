@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -64,12 +65,16 @@ public class MainActivity extends AppCompatActivity {
              Intent intent = new Intent(this, ProfileActivity.class);
               startActivity(intent);
 
+              finish();
+
 
 
              //처음이 아니네
              isFirst = false;
          }
     }
+
+
 
     void loadData(){
         SharedPreferences pref = getSharedPreferences("account", MODE_PRIVATE);
@@ -134,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
         //FireStorage 파일명 중복x
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
-        String fileName = simpleDateFormat.format(new Date())+".pgn";
+        String fileName = simpleDateFormat.format(new Date())+".png";
 
         //이미지 업로드
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
@@ -151,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
                         //다운로드 주소 url 문자열로 얻기
                         G.profileUrl = uri.toString();
                         Toast.makeText(MainActivity.this, "저장 완료", Toast.LENGTH_SHORT).show();
+                        Log.i("log",G.profileUrl);
 
 //                        //Firestore DB 에 저장
                         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
