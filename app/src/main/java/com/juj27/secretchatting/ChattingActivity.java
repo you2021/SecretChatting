@@ -5,11 +5,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -17,8 +20,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 
 public class ChattingActivity extends AppCompatActivity {
 
@@ -44,7 +50,23 @@ public class ChattingActivity extends AppCompatActivity {
         chatAdapter = new ChatAdapter(this, messageItems);
         listView.setAdapter(chatAdapter);
 
-        String chat = G.nickName+ item.proName;
+
+        String chat = G.nickName;
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("name");
+
+
+        String arr[]= {G.nickName, name};
+        Arrays.sort(arr);
+        chat= Arrays.toString(arr);
+
+        chat.replace("[","");
+        chat.replace(",","");
+        chat.replace("]","");
+
+
+        Toast.makeText(this, ""+chat, Toast.LENGTH_SHORT).show();
+
 
         //Firebase  Database 에 저장되어 있는 메세지들 읽어오기
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -90,6 +112,8 @@ public class ChattingActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     public void clickSend(View view) {
 

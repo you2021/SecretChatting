@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.FileUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -74,7 +75,7 @@ public class ProfileActivity extends AppCompatActivity {
         View.setAdapter(adapter);
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference personRef = firebaseDatabase.getReference().child("person");
+        DatabaseReference personRef = firebaseDatabase.getReference("person");
 
         personRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -87,7 +88,7 @@ public class ProfileActivity extends AppCompatActivity {
                     items.add(item);
 
                     adapter.notifyDataSetChanged();
-                    View.setSelection(items.size()-1);
+                    View.setSelection(items.size());
                 }
             }
 
@@ -117,6 +118,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, android.view.View view, int position, long id) {
                 Intent intent = new Intent(ProfileActivity.this, ChattingActivity.class);
                 intent.putExtra("name", item.proName );
+                Log.i("aa",item.proName);
                 startActivity(intent);
             }
         });

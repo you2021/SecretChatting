@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
              Intent intent = new Intent(this, ProfileActivity.class);
               startActivity(intent);
 
-              finish();
+
 
              //처음이 아니네
              isFirst = false;
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
 //                        //Firestore DB 에 저장
                         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-                        DatabaseReference rootRef = firebaseDatabase.getReference();
+                        DatabaseReference rootRef = firebaseDatabase.getReference("person");
 
                         String proName = G.nickName;
                         String age = G.age;
@@ -162,8 +162,8 @@ public class MainActivity extends AppCompatActivity {
 
                         ProfileVOItem person = new ProfileVOItem(proName,age,proUrl);
 
-                        DatabaseReference personRef = rootRef.child("person");
-                        personRef.push().setValue(person);
+                        DatabaseReference personRef = rootRef.child(G.nickName);
+                        personRef.setValue(person);
 
                         //처음 실행할때만 닉네임과 사진을 입력하기
                         SharedPreferences pref = getSharedPreferences("account", MODE_PRIVATE);
