@@ -14,12 +14,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="연결고리"
-            android:textSize="40sp"
+            android:text="속닥쏙닥"
+            android:textSize="50sp"
             android:textStyle="bold"
-            android:textColor="#FF333333"
+            android:textColor="#E18D9A"
             android:layout_marginTop="20dp"
-            android:layout_marginLeft="60dp"/>
+            android:layout_marginLeft="120dp"/>
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -61,7 +61,7 @@
         android:background="@drawable/bg_circle"
         android:layout_centerHorizontal="true"
         android:src="@drawable/ic_person_24"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="80dp"
         android:clickable="true"
         android:onClick="clickCircle"/>
 
@@ -70,10 +70,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:backgroundTint="#FFA9C6"
-        android:layout_margin="16dp"
+        android:backgroundTint="#B4D7FE"
+        android:layout_margin="50dp"
         android:text="입장"
-        android:textSize="30sp"
+        android:textSize="40sp"
         android:textColor="#000000"
         android:onClick="clickBtn"/>
 

@@ -12,9 +12,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.FileUtils;
-import android.util.Log;
-import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,7 +29,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,6 +63,7 @@ public class ProfileActivity extends AppCompatActivity {
         img = findViewById(R.id.circle_img);
 
         loadData();
+
         tvName.setText(G.nickName);
         tvAge.setText(G.age+"세");
         Glide.with(this).load(G.profileUrl).into(img);
@@ -109,19 +106,6 @@ public class ProfileActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        View.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, android.view.View view, int position, long id) {
-                ProfileVOItem item = items.get(position);
-
-                Intent intent = new Intent(ProfileActivity.this, ChattingActivity.class);
-                intent.putExtra("name",item.proName);
-                startActivity(intent);
-
 
             }
         });

@@ -1,12 +1,15 @@
 package com.juj27.secretchatting;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -45,10 +48,6 @@ public class ProfileAdapter extends BaseAdapter {
 
         ProfileVOItem item = items.get(position);
 
-//        Intent intent = new Intent(context, ChattingActivity.class);
-//        intent.putExtra("name",item.proName);
-//        context.startActivity(intent);
-
         View itemView = null;
 
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -62,6 +61,37 @@ public class ProfileAdapter extends BaseAdapter {
         tvAge.setText(item.proAge+"세");
 
         Glide.with(context).load(item.proUrl).into(civ);
+        
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(context, "click", Toast.LENGTH_SHORT).show();
+
+                CharSequence[] list = {"친구목록 추가하기", "대화하기"};
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setItems(list, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                     //   Toast.makeText(context, list[which]+"선택", Toast.LENGTH_SHORT).show();
+                        if (list[which] == list[0]){
+                            Intent intent = new Intent(context, ListActivity.class);
+                            intent.putExtra("name",item.proName);
+                            intent.putExtra("age",item.proAge);
+                            intent.putExtra("url",item.proUrl);
+                            context.startActivity(intent);
+                        }else {
+                            Intent intent = new Intent(context, ChattingActivity.class);
+                            intent.putExtra("name",item.proName);
+                            context.startActivity(intent);
+                        }
+                    }
+                });
+
+                builder.create();
+                builder.show();
+            }
+        });
 
         return itemView;
     }
