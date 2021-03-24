@@ -71,7 +71,7 @@ public class ChattingActivity extends AppCompatActivity {
         chat= chat.replace("]","");
 
 
-        Toast.makeText(this, ""+chat, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this, ""+chat, Toast.LENGTH_SHORT).show();
 
 
         //Firebase  Database 에 저장되어 있는 메세지들 읽어오기
